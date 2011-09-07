@@ -5,14 +5,9 @@ class Routes {
 	public static function show() {
 
 	return array(
-		
-		"/people"=>
-		function()  {
+		"/people"=> function(){
 			echo "<h1>hey now</h1>";
 		}
-		
-	
-		
 	);}
 }
 
