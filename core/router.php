@@ -21,6 +21,8 @@ class Router
 		case "delete":
 		    $this->set_route($verb,$argument[0], $argument[1]);
 		    break;
+		default:
+			throw new Exception('FATAL ERROR: undefined function '.$verb.' for router class\n');
 		}
 	}
 	

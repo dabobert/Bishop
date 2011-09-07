@@ -54,6 +54,6 @@ class myApp extends Bishop
 
 
 $foo = new myApp;
-
+$foo->h;
 
 ?>
