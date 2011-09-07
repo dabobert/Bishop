@@ -39,7 +39,7 @@ class myApp extends Bishop
 		$handlers = array("/people"=>"<h1>hey<h1>","*"=>"<pre>everything</pre>");
 		echo $this->{$this->method}("str");
 		$a = Routes::show();
-		$b = $a["/people"];
+		$b = $a['/people:format'];
 		$b();
 		//var_dump();
 	}
