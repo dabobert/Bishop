@@ -6,7 +6,8 @@ class Routes {
 
 	return array(
 		
-		"/people"=>function(){
+		"/people"=>
+		function()  {
 			echo "<h1>hey now</h1>";
 		}
 		
@@ -14,7 +15,6 @@ class Routes {
 		
 	);}
 }
-
 
 
 

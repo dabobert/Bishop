@@ -38,7 +38,10 @@ class myApp extends Bishop
 		$paths = array("/people","*");
 		$handlers = array("/people"=>"<h1>hey<h1>","*"=>"<pre>everything</pre>");
 		echo $this->{$this->method}("str");
-		var_dump(Routes::show());
+		$a = Routes::show();
+		$b = $a["/people"];
+		$b();
+		//var_dump();
 	}
 
 
