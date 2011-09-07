@@ -1,11 +1,20 @@
 <?
+error_reporting(E_ALL);
+
+//create the router object
+$router = new Router(true);
+
+//include the routes file AFTER the router has been created
 require_once dirname(__FILE__)."/../routes.php";
+
+
 
 class Router
 {
 	private		$debug;
 	protected	$routes;
 	
+	//when debug is false, it will not display debugging information
 	function __construct($debug=false) {
 		$this->debug = $debug;
 	}
@@ -13,12 +22,12 @@ class Router
 	public function __call($verb,$argument) {
 		
 		switch ($verb) {
-		case "put":
-		case "header":
-		case "options":
-		case "get":
-		case "post":
-		case "delete":
+		case "post":			//should Create a resource
+		case "get":				//should Read a resource
+		case "put":				//should Update a resource 
+		case "delete":			//should Delete a resource
+		case "header":			//should *******
+		case "options":			//should *******
 		    $this->set_route($verb,$argument[0], $argument[1]);
 		    break;
 		default:
