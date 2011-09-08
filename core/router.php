@@ -37,9 +37,22 @@ class Router
 	
 	
 	public function match($verb,$uri) {
+		$uri_info 	= pathinfo($uri);
+		
+		if (isset($uri_info["extension"]))
+			$uri_offset = 1;
+		else
+			$uri_offset = 0;
+		
 		foreach($this->routes[$verb] as $pattern=>$closure)
-			if ($pattern == $uri)
+		{
+			$route_info		= pathinfo($this->purge_format($pattern));
+
+			if (($uri_info["dirname"] == $route_info["dirname"] && $uri_info["filename"] == $route_info["filename"]) ||
+				($uri_info["dirname"] == $route_info["dirname"] && $this->is_stub($route_info["filename"])
+				&& (count($uri_info) == count($route_info) + $uri_offset)))
 				return $closure;
+		}
 		throw new Exception('FATAL ERROR: no route matches '.$uri);
 	}
 	
@@ -53,6 +66,16 @@ class Router
 		//	the structure of the routes matter as the order in which they are defined matters.  if get(*,{closure}) is defined
 		//	first then it will be used for all resources accessed via get
 		$this->routes[$verb][$uri] = $closure;
+	}
+	
+	
+	private function purge_format($pattern) {
+		return preg_replace('/(\(.:format\)\z)/i', NULL, $pattern);
+	}
+	
+	
+	private function is_stub($portion) {
+		return substr($portion,0,1) == ":";
 	}
 };
 

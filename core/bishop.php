@@ -1,11 +1,5 @@
 <?
 
-$string = '/people/new(.:format)';
-$pattern = '(\(.:format\))';
-$replacement = NULL;
-echo preg_replace($pattern, $replacement, $string);
-
-
 error_reporting(E_ALL);
 require_once dirname(__FILE__)."/router.php";
 
@@ -23,12 +17,16 @@ class Bishop
 		//Bishop::debug();
 		$this->method 	= strtolower($_SERVER["REQUEST_METHOD"]);
 		$this->router	= $router;
-		$this->uri		= pathinfo($_SERVER["PATH_INFO"]);
+		$this->uri		= $this->clean_uri();
 	}
 	
+	public function clean_uri() {
+		//remove any trailing slash
+		return preg_replace('/\/\z/', NULL, $_SERVER["PATH_INFO"]);
+	}
 	
 	public function run() {
-		$closure = $this->router->match($this->method,"/people/new(.:format)");
+		$closure = $this->router->match($this->method,$this->uri);
 		if ($return = $closure())
 			echo $return;
 		else
