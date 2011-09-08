@@ -1,11 +1,9 @@
 <?
 
-
 $string = '/people/new(.:format)';
 $pattern = '(\(.:format\))';
 $replacement = NULL;
-return preg_replace($pattern, $replacement, $string);
-
+echo preg_replace($pattern, $replacement, $string);
 
 
 error_reporting(E_ALL);
