@@ -9,7 +9,7 @@ $router->get('/people:id:format', function() {
 });
 
 $router->get('/people/new:format', function() {
-	echo "<h1>show form to create new person </h1>";
+	echo "<h1>show form to create new person</h1>";
 });
 
 $router->post('/people:format', function() {

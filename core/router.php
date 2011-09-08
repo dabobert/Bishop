@@ -12,7 +12,7 @@ require_once dirname(__FILE__)."/../routes.php";
 class Router
 {
 	private		$debug;
-	protected	$routes;
+	public	$routes;
 	
 	//when debug is false, it will not display debugging information
 	function __construct($debug=false) {
@@ -35,6 +35,15 @@ class Router
 		}
 	}
 	
+	
+	public function match($verb,$uri) {
+		foreach($this->routes[$verb] as $pattern=>$closure)
+			if ($pattern == $uri)
+				return $closure;
+		throw new Exception('FATAL ERROR: no route matches '.$uri);
+	}
+	
+	
 	public function set_route($verb,$uri, $closure) {
 		if ($this->debug)
 			echo "adding $verb method for $uri<br>\n";
@@ -43,7 +52,7 @@ class Router
 		//2nd index stores a hash (aka associative array) of the uri being access and the closure (aka block) to execute
 		//	the structure of the routes matter as the order in which they are defined matters.  if get(*,{closure}) is defined
 		//	first then it will be used for all resources accessed via get
-		$this->routes[$verb][] = array($uri,$closure);
+		$this->routes[$verb][$uri] = $closure;
 	}
 };
 

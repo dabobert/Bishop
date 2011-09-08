@@ -8,13 +8,15 @@ require_once dirname(__FILE__)."/routes.php";
 class Bishop
 {
 	protected $method;
+	protected $router;
 	protected $format;
 	protected $uri;
 	protected $id;
 	
-	function __construct() {
+	function __construct($router) {
 		//Bishop::debug();
 		$this->method 	= strtolower($_SERVER["REQUEST_METHOD"]);
+		$this->router	= $router;
 		$this->uri		= pathinfo($_SERVER["PATH_INFO"]);
 		if (isset($this->uri["extension"]))
 			$this->format = $this->uri["extension"];
@@ -22,7 +24,15 @@ class Bishop
 			$this->format = "html";
 	}
 	
-	public static function debug() {
+	public function run() {
+		$foo = $this->router->match($this->method,"/people:format");
+		$foo();
+	}
+	
+	
+	
+	
+	private static function debug() {
 		var_dump($_SERVER);
 		echo "<hr>\n";
 		var_dump(pathinfo($_SERVER["PATH_INFO"]));
@@ -30,30 +40,9 @@ class Bishop
 	}
 };
 
-class myApp extends Bishop 
-{
-	function __construct() {
-
-		parent::__construct();
-		$paths = array("/people","*");
-		$handlers = array("/people"=>"<h1>hey<h1>","*"=>"<pre>everything</pre>");
-		echo $this->{$this->method}("str");
-		$a = Routes::show();
-		$b = $a['/people:format'];
-		$b();
-		//var_dump();
-	}
 
 
-	
-	function get($str)
-	{
-		echo "howdy--$str";
-	}
-};
-
-
-$foo = new myApp;
-$foo->h;
+$foo = new Bishop($router);
+$foo->run();
 
 ?>
