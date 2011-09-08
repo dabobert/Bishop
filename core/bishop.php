@@ -34,8 +34,9 @@ class Bishop
 			$this->params["id"] = $match["id"];
 		if (isset($match["params"]))
 			$this->params["params"] = $match["params"];
-		$this->params				= array_merge($this->params,$_REQUEST);
+		$this->params				= array_merge($this->params,$_REQUEST,$this->parse_argv());
 		$this->params["uri"] 		= $this->uri;
+
 		return $this->params;
 	}
 	
@@ -51,7 +52,22 @@ class Bishop
 		}
 	}
 	
-	
+	private function parse_argv()
+	{
+		$array = array();
+		
+		if (isset($_SERVER["argv"][0]))
+		{
+			$argv = explode("&",$_SERVER["argv"][0]);
+			foreach($argv as $param_str)
+			{
+				$param_var 	= explode("=",$param_str);
+				$array[$param_var[0]]= $param_var[1];
+			}
+		}
+		
+		return $array;
+	}
 
 	private static function debug() {
 		var_dump($_SERVER);

@@ -9,8 +9,6 @@ class Person {
 	
 	function __construct($init_array)
 	{
-		
-		var_dump($init_array);
 		$this->first_name = $init_array[0];
 		$this->last_name = $init_array[1];
 		$this->phone = $init_array[2];

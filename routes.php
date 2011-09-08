@@ -13,7 +13,6 @@ $router->get('/people/new', function($params) {
 //$router->get('/people/:id/edit', function($params) { //this is right
 $router->get('/people/edit/:id', function($params) { //this is wrong
 	$people = file(dirname(__FILE__)."/support/people.txt");
-	
 	$index 	= $params["id"]-1;
 	
 	//explode the row, and pass it to the person model
