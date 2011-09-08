@@ -1,6 +1,13 @@
 <?
 
 
+$string = '/people/new(.:format)';
+$pattern = '(\(.:format\))';
+$replacement = NULL;
+return preg_replace($pattern, $replacement, $string);
+
+
+
 error_reporting(E_ALL);
 require_once dirname(__FILE__)."/router.php";
 
@@ -23,7 +30,7 @@ class Bishop
 	
 	
 	public function run() {
-		$closure = $this->router->match($this->method,"/people/new:format");
+		$closure = $this->router->match($this->method,"/people/new(.:format)");
 		if ($return = $closure())
 			echo $return;
 		else
@@ -37,6 +44,8 @@ class Bishop
 
 	private static function debug() {
 		var_dump($_SERVER);
+		echo "<hr>\n";
+		var_dump($_SERVER["PATH_INFO"]);
 		echo "<hr>\n";
 		var_dump(pathinfo($_SERVER["PATH_INFO"]));
 		echo "<hr>\n";
