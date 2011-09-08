@@ -2,14 +2,15 @@
 
 
 error_reporting(E_ALL);
-require_once dirname(__FILE__)."/core/router.php";
-require_once dirname(__FILE__)."/routes.php";
+require_once dirname(__FILE__)."/router.php";
+
 
 class Bishop
 {
 	protected $method;
 	protected $router;
 	protected $format;
+	protected $template_file;
 	protected $uri;
 	protected $id;
 	
@@ -18,20 +19,22 @@ class Bishop
 		$this->method 	= strtolower($_SERVER["REQUEST_METHOD"]);
 		$this->router	= $router;
 		$this->uri		= pathinfo($_SERVER["PATH_INFO"]);
-		if (isset($this->uri["extension"]))
-			$this->format = $this->uri["extension"];
-		else
-			$this->format = "html";
 	}
+	
 	
 	public function run() {
-		$foo = $this->router->match($this->method,"/people:format");
-		$foo();
+		$closure = $this->router->match($this->method,"/people/new:format");
+		if ($return = $closure())
+			echo $return;
+		else
+		{
+			//by including it here, the framework won't error out when it is not included, because it's not in use
+			require_once dirname(__FILE__)."/viewer.php";
+			Viewer::render($this->uri);
+		}
 	}
 	
-	
-	
-	
+
 	private static function debug() {
 		var_dump($_SERVER);
 		echo "<hr>\n";
@@ -41,8 +44,5 @@ class Bishop
 };
 
 
-
-$foo = new Bishop($router);
-$foo->run();
 
 ?>
