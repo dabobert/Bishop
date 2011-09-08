@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 $router = new Router();
 
 //include the routes file AFTER the router has been created
-require_once dirname(__FILE__)."/../routes.php";
+require_once dirname(__FILE__).'/../routes.php';
 
 
 
@@ -46,12 +46,13 @@ class Router
 		
 		foreach($this->routes[$verb] as $pattern=>$closure)
 		{
-			$route_info		= pathinfo($this->purge_format($pattern));
+			$route_info		= pathinfo($pattern);
 
-			if (($uri_info["dirname"] == $route_info["dirname"] && $uri_info["filename"] == $route_info["filename"]) ||
-				($uri_info["dirname"] == $route_info["dirname"] && $this->is_stub($route_info["filename"])
-				&& (count($uri_info) == count($route_info) + $uri_offset)))
-				return $closure;
+			if ($uri_info["dirname"] == $route_info["dirname"] && $uri_info["filename"] == $route_info["filename"])
+				return array("closure"=>$closure);
+			elseif ($uri_info["dirname"] == $route_info["dirname"] && $this->is_stub($route_info["filename"])
+				&& (count($uri_info) == count($route_info) + $uri_offset))
+				return array("closure"=>$closure, "id"=>$uri_info["filename"]);
 		}
 		throw new Exception('FATAL ERROR: no route matches '.$uri);
 	}
@@ -66,11 +67,6 @@ class Router
 		//	the structure of the routes matter as the order in which they are defined matters.  if get(*,{closure}) is defined
 		//	first then it will be used for all resources accessed via get
 		$this->routes[$verb][$uri] = $closure;
-	}
-	
-	
-	private function purge_format($pattern) {
-		return preg_replace('/(\(.:format\)\z)/i', NULL, $pattern);
 	}
 	
 	

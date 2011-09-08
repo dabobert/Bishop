@@ -1,17 +1,20 @@
 <?
 
 error_reporting(E_ALL);
+require_once dirname(__FILE__)."/init.php";
 require_once dirname(__FILE__)."/router.php";
 
 
 class Bishop
 {
 	protected $method;
+	protected $template_engine;
 	protected $router;
 	protected $format;
 	protected $template_file;
 	protected $uri;
 	protected $id;
+	protected $params;
 	
 	function __construct($router) {
 		//Bishop::debug();
@@ -25,9 +28,20 @@ class Bishop
 		return preg_replace('/\/\z/', NULL, $_SERVER["PATH_INFO"]);
 	}
 	
+	public function params($match)
+	{
+		if (isset($match["id"]))
+			$this->params["id"] = $match["id"];
+		if (isset($match["params"]))
+			$this->params["params"] = $match["params"];
+		$this->params				= array_merge($this->params,$_REQUEST);
+		$this->params["uri"] 		= $this->uri;
+		return $this->params;
+	}
+	
 	public function run() {
-		$closure = $this->router->match($this->method,$this->uri);
-		if ($return = $closure())
+		$match = $this->router->match($this->method,$this->uri);
+		if ($return = $match["closure"]($this->params($match)))
 			echo $return;
 		else
 		{
@@ -36,6 +50,7 @@ class Bishop
 			Viewer::render($this->uri);
 		}
 	}
+	
 	
 
 	private static function debug() {
