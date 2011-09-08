@@ -8,7 +8,7 @@ class Vector
 		$array = array();
 	}
 	
-	public function insert(value) {
+	public function insert($value) {
 		$this->array[] = $value;
 	}
 	

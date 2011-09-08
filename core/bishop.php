@@ -3,6 +3,7 @@
 error_reporting(E_ALL);
 require_once dirname(__FILE__)."/init.php";
 require_once dirname(__FILE__)."/router.php";
+require_once dirname(__FILE__)."/viewer.php";
 
 
 class Bishop
@@ -18,9 +19,10 @@ class Bishop
 	
 	function __construct($router) {
 		//Bishop::debug();
-		$this->method 	= strtolower($_SERVER["REQUEST_METHOD"]);
-		$this->router	= $router;
-		$this->uri		= $this->clean_uri();
+		$this->method 			= strtolower($_SERVER["REQUEST_METHOD"]);
+		$this->router			= $router;
+		$this->uri				= $this->clean_uri();
+		$this->template_engine	= new Viewer;
 	}
 	
 	public function clean_uri() {
@@ -42,14 +44,12 @@ class Bishop
 	
 	public function run() {
 		$match = $this->router->match($this->method,$this->uri);
-		if ($return = $match["closure"]($this->params($match)))
-			echo $return;
-		else
-		{
-			//by including it here, the framework won't error out when it is not included, because it's not in use
-			require_once dirname(__FILE__)."/viewer.php";
-			Viewer::render($this->uri);
-		}
+		$this->render($match["closure"]($this->params($match)),$this->format);
+	}
+	
+	protected function render($response, $format) {
+		//to change how bishop renders inherit from bishop and overload the fn
+		$this->template_engine->render($response, $format);
 	}
 	
 	private function parse_argv()

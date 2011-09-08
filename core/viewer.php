@@ -2,7 +2,11 @@
 
 class Viewer
 {
-	public static function render($uri) {
+	
+
+	//public static function render($uri) {
+	public function render($response, $format="html") {
+		$uri="";
 		$path_info 		= pathinfo($uri);
 		$layout 			= dirname(__FILE__)."/../app/views/layouts/default.html.php";
 		$template_file= Viewer::generate_template_path($uri);

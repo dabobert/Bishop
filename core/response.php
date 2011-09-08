@@ -10,12 +10,12 @@ class Response
 	public $variables;
 	public $format;
 	
-	function __construct() {
+	function __construct($str="") {
 		$this->header 	= new Vector();
 		$this->variables= new Vector();
 		$this->status 	= 200;
-		$this->format;
-		$this->body;
+		$this->format	= "html";
+		$this->body		= $str;
 	}
 }
 

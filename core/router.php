@@ -5,6 +5,7 @@ error_reporting(E_ALL);
 $router = new Router();
 
 //include the routes file AFTER the router has been created
+require_once dirname(__FILE__).'/response.php';
 require_once dirname(__FILE__).'/../routes.php';
 
 
