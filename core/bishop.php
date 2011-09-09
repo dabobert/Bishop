@@ -18,7 +18,7 @@ class Bishop
 	protected $params;
 	
 	function __construct($router) {
-		Bishop::debug();
+		//Bishop::debug();
 		$this->method 		= strtolower($_SERVER['REQUEST_METHOD']);
 		$this->router			= $router;
 		$this->uri				= $this->clean_uri();

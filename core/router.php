@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 
 //create the router object
-$router = new Router(true);
+$router = new Router();
 
 //include the routes file AFTER the router has been created
 require_once dirname(__FILE__).'/response.php';
@@ -51,12 +51,19 @@ class Router
 				$this->debug_match($uri_array, $ptn_array);
 	
 			foreach($ptn_array as $index=>$value) {
+				//$this->debug_micro_match($uri_array[$index],$ptn_array[$index]);
+				
 				if ($uri_array[$index] != $ptn_array[$index] && !$this->is_stub($value))
 				 	break;
 				
 				//if the current value is a stub save the value in params
 				if ($this->is_stub($value))
 					$params[$this->stub_value($value)] = $uri_array[$index];
+				
+				if ($this->debug)
+					echo "PASS!!!<br>\n";
+				
+				//$this->debug_micro_match($index,$max_index);
 				
 				//if we haven't yet hit a break and we reach the max_index then we know we're done
 				if($max_index == $index)
@@ -77,6 +84,7 @@ class Router
 							$params["action"] = $uri_array[$max_index];
 						else
 							$params["action"] = "index";
+						break;
 					default:
 						throw new Exception('FATAL ERROR: Bishop can not handle a method of '.$verb."\n");
 					}
@@ -109,12 +117,21 @@ class Router
 		return substr($portion,1,(strlen($portion)-1));
 	}
 	
+	private function debug_heavy_break() {
+		echo '~~~~~~~~~~~~~~~~~<br>'."\n";
+	}
+	
 	private function debug_match($uri_array, $ptn_array) {
+		echo "==============================<br>\n";
 		echo "pattern<br>\n";
 		var_dump($uri_array);
 		echo "uri<br>\n";
-		var_dump($ptn_array);
-		echo "======<br>\n";
+		var_dump($ptn_array);	
+	}
+	
+	private function debug_micro_match($a,$b) {
+		$this->debug_heavy_break();
+		echo "$a vs $b<br>\n";
 	}
 };
 
