@@ -23,12 +23,12 @@ class Router
 	public function __call($verb,$argument) {
 		
 		switch ($verb) {
-		case "post":			//should Create a resource
-		case "get":				//should Read a resource
-		case "put":				//should Update a resource 
-		case "delete":		//should Delete a resource
-		case "header":		//should *******
-		case "options":		//should *******
+		case 'post':			//should Create a resource
+		case 'get':				//should Read a resource
+		case 'put':				//should Update a resource 
+		case 'delete':		//should Delete a resource
+		case 'header':		//should *******
+		case 'options':		//should *******
 		    $this->set_route($verb,$argument[0], $argument[1]);
 		    break;
 		default:
@@ -40,7 +40,7 @@ class Router
 	public function match($verb,$uri) {
 		$uri_info 	= pathinfo($uri);
 		
-		if (isset($uri_info["extension"]))
+		if (isset($uri_info['extension']))
 			$uri_offset = 1;
 		else
 			$uri_offset = 0;
@@ -49,14 +49,14 @@ class Router
 		{
 			$route_info		= pathinfo($pattern);
 
-			if ($uri_info["dirname"] == $route_info["dirname"] && $uri_info["filename"] == $route_info["filename"])
+			if ($uri_info['dirname'] == $route_info['dirname'] && $uri_info['filename'] == $route_info['filename'])
 				if (count($uri_info) == 1)
-					array("closure"=>$closure, "action"=>"index");
+					array('closure'=>$closure, 'action'=>'index');
 				else
-					return array("closure"=>$closure, "action"=>$uri_info["filename"]);
-			elseif ($uri_info["dirname"] == $route_info["dirname"] && $this->is_stub($route_info["filename"])
+					return array('closure'=>$closure, 'action'=>$uri_info['filename']);
+			elseif ($uri_info['dirname'] == $route_info['dirname'] && $this->is_stub($route_info['filename'])
 				&& (count($uri_info) == count($route_info) + $uri_offset))
-				return array("closure"=>$closure, "id"=>$uri_info["filename"]);
+				return array('closure'=>$closure, 'id'=>$uri_info['filename']);
 		}
 		throw new Exception('FATAL ERROR: no route matches '.$uri);
 	}
@@ -64,7 +64,7 @@ class Router
 	
 	public function set_route($verb,$uri, $closure) {
 		if ($this->debug)
-			echo "adding $verb method for $uri<br>\n";
+			echo 'adding $verb method for $uri<br>\n';
 		//Structure of nested routes array
 		//1st index stores the method that should be used to access it
 		//2nd index stores a hash (aka associative array) of the uri being access and the closure (aka block) to execute
@@ -75,7 +75,7 @@ class Router
 	
 	
 	private function is_stub($portion) {
-		return substr($portion,0,1) == ":";
+		return substr($portion,0,1) == ':';
 	}
 };
 

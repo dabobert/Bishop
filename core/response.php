@@ -1,6 +1,6 @@
 <?
 
-require_once dirname(__FILE__)."/vector.php";
+require_once dirname(__FILE__).'/vector.php';
 
 class Response
 {
@@ -12,11 +12,11 @@ class Response
 	public $format;
 	public $method;
 	
-	function __construct($str="") {
+	function __construct($str='') {
 		$this->header 	= new Vector();
 		$this->variables= new Vector();
 		$this->status 	= 200;
-		$this->format	= "html";
+		$this->format	= 'html';
 		$this->body		= $str;
 	}
 }

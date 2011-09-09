@@ -22,7 +22,7 @@ class Person {
 		$line--;
 		
 		//find the text file;
-		$people = file(dirname(__FILE__)."/../../support/people.txt");
+		$people = file(dirname(__FILE__).'/../../support/people.txt');
 
 		//explode the row, and pass it to the person model
 		$person = new Person(explode("\t",$people[$line]));

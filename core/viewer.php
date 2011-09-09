@@ -7,7 +7,7 @@ class Viewer
 	protected $output;
 
 	
-	public function render($response, $format="html") {
+	public function render($response, $format='html') {
 		$this->response = $response;
 		
 		if ($this->response->body)
@@ -19,14 +19,14 @@ class Viewer
 	
 	
 	public static function generate_template_path($uri) {
-		return dirname(__FILE__)."/../app/views/people/new.html.php";
+		return dirname(__FILE__).'/../app/views/people/new.html.php';
 	}
 	
 	
 	private function apply_template()
 	{
 		$this->template_file= Viewer::generate_template_path($this->response->uri);
-		$layout 						= dirname(__FILE__)."/../app/views/layouts/default.html.php";
+		$layout 						= dirname(__FILE__).'/../app/views/layouts/default.html.php';
 		
 		if (!$this->response->variables->blank())
 		  extract($this->response->variables);
@@ -48,12 +48,12 @@ class Viewer
 	
 	private function format_header() {
 		switch ($this->response->format) {
-		case "txt":		'Content-Type: text/plain';
-		case "json":	'Content-type: application/json';
-		case "xml": 	
-		case "html":
+		case 'txt':		'Content-Type: text/plain';
+		case 'json':	'Content-type: application/json';
+		case 'xml': 	
+		case 'html':
 		default:
-			return "html";
+			return 'html';
 		}
 	}
 	
