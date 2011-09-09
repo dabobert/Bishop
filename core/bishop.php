@@ -1,9 +1,9 @@
 <?
 
 error_reporting(E_ALL);
-require_once dirname(__FILE__)."/init.php";
-require_once dirname(__FILE__)."/router.php";
-require_once dirname(__FILE__)."/viewer.php";
+require_once dirname(__FILE__).'/init.php';
+require_once dirname(__FILE__).'/router.php';
+require_once dirname(__FILE__).'/viewer.php';
 
 
 class Bishop
@@ -19,7 +19,7 @@ class Bishop
 	
 	function __construct($router) {
 		//Bishop::debug();
-		$this->method 		= strtolower($_SERVER["REQUEST_METHOD"]);
+		$this->method 		= strtolower($_SERVER['REQUEST_METHOD']);
 		$this->router			= $router;
 		$this->uri				= $this->clean_uri();
 		$this->format			= $this->format();
@@ -29,17 +29,17 @@ class Bishop
 	
 	public function clean_uri() {
 		//remove any trailing slash
-		return preg_replace('/\/\z/', NULL, $_SERVER["PATH_INFO"]);
+		return preg_replace('/\/\z/', NULL, $_SERVER['PATH_INFO']);
 	}
 	
 	public function params($match)
 	{
-		if (isset($match["id"]))
-			$this->params["id"] = $match["id"];
-		if (isset($match["params"]))
-			$this->params["params"] = $match["params"];
+		if (isset($match['id']))
+			$this->params['id'] = $match['id'];
+		if (isset($match['params']))
+			$this->params['params'] = $match['params'];
 		$this->params				= array_merge($this->params,$_REQUEST,$this->parse_argv());
-		$this->params["uri"] 		= $this->uri;
+		$this->params['uri'] 		= $this->uri;
 
 		return $this->params;
 	}
@@ -47,7 +47,9 @@ class Bishop
 	
 	public function run() {
 		$match 							= $this->router->match($this->method,$this->uri);
-		$response 					= $match["closure"]($this->params($match));
+		//Make a response object if the closure was empty
+		if (! ($response = $match['closure']($this->params($match))))
+			$response = new Response();
 		$response->format		= $this->format;
 		$response->uri			= $this->uri;
 		$response->method		= $this->method;
@@ -64,12 +66,12 @@ class Bishop
 	private function parse_argv() {
 		$array = array();
 		
-		if (isset($_SERVER["argv"][0]))
+		if (isset($_SERVER['argv'][0]))
 		{
-			$argv = explode("&",$_SERVER["argv"][0]);
+			$argv = explode('&',$_SERVER['argv'][0]);
 			foreach($argv as $param_str)
 			{
-				$param_var 	= explode("=",$param_str);
+				$param_var 	= explode('=',$param_str);
 				$array[$param_var[0]]= $param_var[1];
 			}
 		}
@@ -79,28 +81,31 @@ class Bishop
 	
 	public function format() {
 		$uri_info = pathinfo($this->uri);
-		if (isset($uri_info["extension"]))	
-			switch ($uri_info["extension"]) {
-			case "json":
-			case "xml":
+		if (isset($uri_info['extension']))	
+			switch ($uri_info['extension']) {
+			case 'json':
+			case 'txt':
+			case 'xml':
 				return  $extension;
 				break;
-			case "html":
+			case 'html':
 			default:
-				return "html";
+				return 'html';
 			}
 		else
-			return "html";
+			return 'html';
 	}
-
+	
+	
 	private static function debug() {
 		var_dump($_SERVER);
 		echo "<hr>\n";
-		var_dump($_SERVER["PATH_INFO"]);
+		var_dump($_SERVER['PATH_INFO']);
 		echo "<hr>\n";
-		var_dump(pathinfo($_SERVER["PATH_INFO"]));
+		var_dump(pathinfo($_SERVER['PATH_INFO']));
 		echo "<hr>\n";
 	}
+
 };
 
 
