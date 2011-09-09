@@ -36,31 +36,23 @@ class Bishop
 	
 	public function params($match)
 	{
-		$this->params				= $match["params"];
-		if (isset($match['id']))
-			$this->params['id'] = $match['id'];
-		if (isset($match['params']))
-			$this->params['params'] = $match['params'];
-		$this->params				= array_merge($this->params,$_REQUEST,$this->parse_argv());
+		$this->params				= array_merge($match["params"],$_REQUEST,$this->parse_argv());
 		$this->params['uri'] 		= $this->uri;
-
 		return $this->params;
 	}
 	
 	
 	public function run() {
 		$match 							= $this->router->match($this->method,$this->uri);
-		//Make a response object if the closure was empty
-		
-		exit(var_dump($match));
-		
-		
+		//Make a response object if the closure was empty		
 		if (! ($response = $match['closure']($this->params($match))))
 			$response = new Response();
-		$response->action		= $match["action"];
+		$response->action		= $this->params["action"];
 		$response->format		= $this->format;
+		$response->path			= $this->params["path"];
 		$response->uri			= $this->uri;
 		$response->method		= $this->method;
+				exit();
 		$this->render($response);
 	}
 	

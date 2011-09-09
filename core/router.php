@@ -36,16 +36,24 @@ class Router
 		}
 	}
 	
+	static public function clean_explode($uri, $splitter='/') {
+		//we call array_filter to remove empty indices and we call array_values to make sure
+		//we call array_values to make sure the indices are 0,1,2,etc
+		//which fixes the problem of array_filter(explode("/","/people/1/cars/5"), 'strlen') which is STUPID! imho\
+		return array_values(array_filter(explode($splitter,$uri), 'strlen'));
+	}
 	
 	public function match($verb,$uri) {
-
-		$uri_array 	= array_filter(explode("/",$uri), 'strlen');
+		$uri_array 	= Router::clean_explode($uri);
 		$max_index 	= count($uri_array) - 1;	
 		$params		= array();
-			
+
 		foreach($this->routes[$verb] as $pattern=>$closure)
 		{
-			$ptn_array = array_filter(explode("/",$pattern), 'strlen');
+			//we call array_filter to remove empty indices and we call array_values to make sure
+			//we call array_values to make sure the indices are 0,1,2,etc
+			//which fixes the problem of array_filter(explode("/","/people/1/cars/5"), 'strlen') which is STUPID! imho
+			$ptn_array = Router::clean_explode($pattern);
 			
 			if ($this->debug)
 				$this->debug_match($uri_array, $ptn_array);
@@ -64,10 +72,10 @@ class Router
 					echo "PASS!!!<br>\n";
 				
 				//$this->debug_micro_match($index,$max_index);
-				
+			
 				//if we haven't yet hit a break and we reach the max_index then we know we're done
 				if($max_index == $index)
-				{
+				{						
 					//set the action
 					switch ($verb) {
 					case 'post':	$params["action"] = 'create';
@@ -80,7 +88,7 @@ class Router
 					case 'get':
 						if ($this->is_stub($ptn_array[$max_index]))
 							$params["action"] = 'show';
-						elseif ($uri_array[$max_index] == "new" || $uri_array[$max_index])
+						elseif ($uri_array[$max_index] == "new" || $uri_array[$max_index] == "edit")
 							$params["action"] = $uri_array[$max_index];
 						else
 							$params["action"] = "index";
@@ -89,6 +97,23 @@ class Router
 						throw new Exception('FATAL ERROR: Bishop can not handle a method of '.$verb."\n");
 					}
 					
+					//values used to parse the pattern to determine the path to any needed view files
+					$stub_count 	= 0;
+					if (!$this->is_stub($ptn_array[$max_index]))
+						$stub_count++;
+						
+					$params["path"] = NULL;
+					
+					for($index=$max_index; $index>=0; $index--) {
+						if (!$this->is_stub($ptn_array[$index]))
+							$params["path"] = $ptn_array[$index].'/'.$params["path"];
+							
+						if ($this->is_stub($ptn_array[$index]))
+							$stub_count++;
+
+						if ($stub_count == 2)
+							break;
+					}
 					return array('closure'=>$closure, 'params'=>$params);
 				}
 			}

@@ -10,6 +10,7 @@ class Response
 	public $action;
 	public $uri;
 	public $variables;
+	public $path;
 	public $format;
 	public $method;
 	

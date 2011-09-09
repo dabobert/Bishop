@@ -1,5 +1,7 @@
 <?
 
+error_reporting(E_ALL);
+
 class Vector
 {
 	private $array;
@@ -12,8 +14,11 @@ class Vector
 		return $this->array;
 	}
 	
-	public function insert($value) {
-		$this->array[] = $value;
+	public function insert($value, $key=NULL) {
+		if ($key)
+			$this->array[$key] = $value;
+		else
+			$this->array[] = $value;
 	}
 	
 	public function clear() {

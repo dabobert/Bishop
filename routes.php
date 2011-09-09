@@ -12,15 +12,18 @@ $router->get('/people/:people_id/cars/:id', function($params) {
 	//will just display the html form
 });
 
-//$router->get('/people/:id/edit', function($params) { //this is right
-$router->get('/people/edit/:id', function($params) { //this is wrong
+$router->get('/people/:id/edit', function($params) {
 	$response = new Response();
-	$response->variables->insert(Person::open($params["id"]));
+	$person		= Person::open($params["id"]);
+	$response->variables->insert($person);
 });
 
 
 $router->get('/people/:id', function($params) {
-	return new Response( "<h1>show a person</h1>");
+	$response = new Response();
+	$person		= Person::open($params["id"]);
+	$response->variables->insert($person,"person");
+	//throw new Exception(var_dump($response->response->contents()));
 });
 
 $router->get('/admin/people', function($params) {
