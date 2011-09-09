@@ -7,6 +7,7 @@ class Response
 	public $header;
 	public $status;
 	public $body;
+	public $action;
 	public $uri;
 	public $variables;
 	public $format;

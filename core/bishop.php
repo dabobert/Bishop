@@ -50,6 +50,7 @@ class Bishop
 		//Make a response object if the closure was empty
 		if (! ($response = $match['closure']($this->params($match))))
 			$response = new Response();
+		$response->action		= $match["action"];
 		$response->format		= $this->format;
 		$response->uri			= $this->uri;
 		$response->method		= $this->method;

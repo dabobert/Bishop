@@ -48,7 +48,16 @@ class Router
 		foreach($this->routes[$verb] as $pattern=>$closure)
 		{
 			$route_info		= pathinfo($pattern);
-
+			
+			if ($this->debug)
+			{
+				echo "pattern<br>\n";
+				var_dump($route_info);
+				echo "uri<br>\n";
+				var_dump($uri_info);
+				echo "======<br>\n";
+			}
+			
 			if ($uri_info['dirname'] == $route_info['dirname'] && $uri_info['filename'] == $route_info['filename'])
 				if (count($uri_info) == 1)
 					array('closure'=>$closure, 'action'=>'index');
@@ -64,7 +73,7 @@ class Router
 	
 	public function set_route($verb,$uri, $closure) {
 		if ($this->debug)
-			echo 'adding $verb method for $uri<br>\n';
+			echo "adding $verb method for $uri<br>\n";
 		//Structure of nested routes array
 		//1st index stores the method that should be used to access it
 		//2nd index stores a hash (aka associative array) of the uri being access and the closure (aka block) to execute

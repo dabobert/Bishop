@@ -18,14 +18,19 @@ class Viewer
 
 	
 	
-	public static function generate_template_path($uri) {
+	public static function generate_template_path($uri, $action) {
+		$uri_info = pathinfo($uri)
+		{
+			//if (isset($uri_info["dirname"]))
+			//else
+		}
 		return dirname(__FILE__).'/../app/views/people/new.html.php';
 	}
 	
 	
 	private function apply_template()
 	{
-		$this->template_file= Viewer::generate_template_path($this->response->uri);
+		$this->template_file= Viewer::generate_template_path($this->response->uri, $this->response->action);
 		$layout 						= dirname(__FILE__).'/../app/views/layouts/default.html.php';
 		
 		if (!$this->response->variables->blank())
