@@ -2,35 +2,22 @@
 
 class Viewer
 {
-	
+	protected $response;
+	protected $template_file;
+	protected $output;
 
-	//public static function render($uri) {
-	public function render($response, $format="html") {
-		$uri="";
-		$path_info 		= pathinfo($uri);
-		$layout 			= dirname(__FILE__)."/../app/views/layouts/default.html.php";
-		$template_file= Viewer::generate_template_path($uri);
-		
-		if (Viewer::format($uri) == "html")
-			if (file_exists($layout))
-				include $layout;
-			else
-				include $template_file;
-		else
-			include $template_file;
-	}
-		
 	
-	public static function format($extension) {		
-		switch ($extension) {
-		case "json":
-		case "xml":
-			return $extension;
-		case "html":
-		default:
-			return "html";
-		}
+	public function render($response, $format="html") {
+		$this->response = $response;
+		
+		
+		
+		if ($this->response->body)
+			echo $this->response->body;
+		else
+			$this->apply_template();
 	}
+
 	
 	
 	public static function generate_template_path($uri) {
@@ -38,18 +25,34 @@ class Viewer
 	}
 	
 	
-	private function apply_template($tpl_file, $vars = array())
+	private function apply_template()
 	{
-	  extract($vars);
-
+		$this->template_file= Viewer::generate_template_path($uri);
+		$layout = dirname(__FILE__)."/../app/views/layouts/default.html.php";
+	  extract($this->response->variables);
+		
 	  ob_start();
-
-	  require($tpl_file);
+		
+		$this->display_header();
+	
+		if (file_exists($layout))
+		  require($layout);
+		else
+			require $this->template_file;
 
 	  $applied_template = ob_get_contents();
 	  ob_end_clean();
 
 	  return $applied_template;
+	}
+	
+	private function display_header() {
+		if ($this->response->header->blank())
+			$this->response->header->insert = $this->format_header();
+			
+		foreach($this->response->header->contents as $header_str) {
+			header($header_str);
+		}
 	}
 	
 }

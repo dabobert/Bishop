@@ -11,6 +11,6 @@
 	<!-- Date: 2011-09-07 -->
 </head>
 <body>
-	<? include $this->template_file ?>
+	<? require $this->template_file ?>
 </body>
 </html>

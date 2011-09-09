@@ -7,8 +7,10 @@ class Response
 	public $header;
 	public $status;
 	public $body;
+	public $uri;
 	public $variables;
 	public $format;
+	public $method;
 	
 	function __construct($str="") {
 		$this->header 	= new Vector();

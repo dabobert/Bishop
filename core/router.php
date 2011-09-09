@@ -50,7 +50,10 @@ class Router
 			$route_info		= pathinfo($pattern);
 
 			if ($uri_info["dirname"] == $route_info["dirname"] && $uri_info["filename"] == $route_info["filename"])
-				return array("closure"=>$closure);
+				if (count($uri_info) == 1)
+					array("closure"=>$closure, "action"=>"index");
+				else
+					return array("closure"=>$closure, "action"=>$uri_info["filename"]);
 			elseif ($uri_info["dirname"] == $route_info["dirname"] && $this->is_stub($route_info["filename"])
 				&& (count($uri_info) == count($route_info) + $uri_offset))
 				return array("closure"=>$closure, "id"=>$uri_info["filename"]);
@@ -75,13 +78,6 @@ class Router
 		return substr($portion,0,1) == ":";
 	}
 };
-
-/*
-
-foreach (glob("*.txt") as $filename) {
-    echo "$filename size " . filesize($filename) . "\n";
-}
-*/
 
 
 ?>

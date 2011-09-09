@@ -5,7 +5,11 @@ class Vector
 	private $array;
 	
 	function __construct() {
-		$array = array();
+		$this->array = array();
+	}
+	
+	public function contents() {
+		return $this->array;
 	}
 	
 	public function insert($value) {
@@ -24,6 +28,9 @@ class Vector
 		unset($this->array[$key]);
 	}
 	
+	public function blank() {
+		return count($this->array) == 0;
+	}
 	
 }
 

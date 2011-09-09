@@ -19,10 +19,12 @@ class Bishop
 	
 	function __construct($router) {
 		//Bishop::debug();
-		$this->method 			= strtolower($_SERVER["REQUEST_METHOD"]);
+		$this->method 		= strtolower($_SERVER["REQUEST_METHOD"]);
 		$this->router			= $router;
 		$this->uri				= $this->clean_uri();
+		$this->format			= $this->format();
 		$this->template_engine	= new Viewer;
+		$this->params			= array();
 	}
 	
 	public function clean_uri() {
@@ -42,18 +44,24 @@ class Bishop
 		return $this->params;
 	}
 	
+	
 	public function run() {
-		$match = $this->router->match($this->method,$this->uri);
-		$this->render($match["closure"]($this->params($match)),$this->format);
+		$match 							= $this->router->match($this->method,$this->uri);
+		$response 					= $match["closure"]($this->params($match));
+		$response->format		= $this->format;
+		$response->uri			= $this->uri;
+		$response->method		= $this->method;
+		$this->render($response);
 	}
 	
-	protected function render($response, $format) {
+	
+	protected function render($response) {
 		//to change how bishop renders inherit from bishop and overload the fn
-		$this->template_engine->render($response, $format);
+		$this->template_engine->render($response);
 	}
 	
-	private function parse_argv()
-	{
+	
+	private function parse_argv() {
 		$array = array();
 		
 		if (isset($_SERVER["argv"][0]))
@@ -67,6 +75,22 @@ class Bishop
 		}
 		
 		return $array;
+	}
+	
+	public function format() {
+		$uri_info = pathinfo($this->uri);
+		if (isset($uri_info["extension"]))	
+			switch ($uri_info["extension"]) {
+			case "json":
+			case "xml":
+				return  $extension;
+				break;
+			case "html":
+			default:
+				return "html";
+			}
+		else
+			return "html";
 	}
 
 	private static function debug() {
