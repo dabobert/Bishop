@@ -18,22 +18,25 @@ class Bishop
 	protected $params;
 	
 	function __construct($router) {
-		//Bishop::debug();
+		Bishop::debug();
 		$this->method 		= strtolower($_SERVER['REQUEST_METHOD']);
 		$this->router			= $router;
 		$this->uri				= $this->clean_uri();
 		$this->format			= $this->format();
 		$this->template_engine	= new Viewer;
-		$this->params			= array();
+		$this->params;			//defined in Bishop::params()
 	}
 	
 	public function clean_uri() {
-		//remove any trailing slash
-		return preg_replace('/\/\z/', NULL, $_SERVER['PATH_INFO']);
+		//remove any trailing slash, and run pathinfo on the result
+		$uri_info = pathinfo(preg_replace('/\/\z/', NULL, $_SERVER['PATH_INFO']));
+		//return the dirname + filename.  we're doing this to strip the extension and any query parameters from the raw uri
+		return $uri_info['dirname'].'/'.$uri_info['filename'];
 	}
 	
 	public function params($match)
 	{
+		$this->params				= $match["params"];
 		if (isset($match['id']))
 			$this->params['id'] = $match['id'];
 		if (isset($match['params']))
@@ -48,6 +51,10 @@ class Bishop
 	public function run() {
 		$match 							= $this->router->match($this->method,$this->uri);
 		//Make a response object if the closure was empty
+		
+		exit(var_dump($match));
+		
+		
 		if (! ($response = $match['closure']($this->params($match))))
 			$response = new Response();
 		$response->action		= $match["action"];

@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 
 //create the router object
-$router = new Router();
+$router = new Router(true);
 
 //include the routes file AFTER the router has been created
 require_once dirname(__FILE__).'/response.php';
@@ -38,34 +38,52 @@ class Router
 	
 	
 	public function match($verb,$uri) {
-		$uri_info 	= pathinfo($uri);
-		
-		if (isset($uri_info['extension']))
-			$uri_offset = 1;
-		else
-			$uri_offset = 0;
-		
+
+		$uri_array 	= array_filter(explode("/",$uri), 'strlen');
+		$max_index 	= count($uri_array) - 1;	
+		$params		= array();
+			
 		foreach($this->routes[$verb] as $pattern=>$closure)
 		{
-			$route_info		= pathinfo($pattern);
+			$ptn_array = array_filter(explode("/",$pattern), 'strlen');
 			
 			if ($this->debug)
-			{
-				echo "pattern<br>\n";
-				var_dump($route_info);
-				echo "uri<br>\n";
-				var_dump($uri_info);
-				echo "======<br>\n";
+				$this->debug_match($uri_array, $ptn_array);
+	
+			foreach($ptn_array as $index=>$value) {
+				if ($uri_array[$index] != $ptn_array[$index] && !$this->is_stub($value))
+				 	break;
+				
+				//if the current value is a stub save the value in params
+				if ($this->is_stub($value))
+					$params[$this->stub_value($value)] = $uri_array[$index];
+				
+				//if we haven't yet hit a break and we reach the max_index then we know we're done
+				if($max_index == $index)
+				{
+					//set the action
+					switch ($verb) {
+					case 'post':	$params["action"] = 'create';
+					case 'put':		$params["action"] = 'update';
+					case 'delete':		
+					case 'header':
+					case 'options':	
+						$params["action"] = $verb;
+					    break;
+					case 'get':
+						if ($this->is_stub($ptn_array[$max_index]))
+							$params["action"] = 'show';
+						elseif ($uri_array[$max_index] == "new" || $uri_array[$max_index])
+							$params["action"] = $uri_array[$max_index];
+						else
+							$params["action"] = "index";
+					default:
+						throw new Exception('FATAL ERROR: Bishop can not handle a method of '.$verb."\n");
+					}
+					
+					return array('closure'=>$closure, 'params'=>$params);
+				}
 			}
-			
-			if ($uri_info['dirname'] == $route_info['dirname'] && $uri_info['filename'] == $route_info['filename'])
-				if (count($uri_info) == 1)
-					array('closure'=>$closure, 'action'=>'index');
-				else
-					return array('closure'=>$closure, 'action'=>$uri_info['filename']);
-			elseif ($uri_info['dirname'] == $route_info['dirname'] && $this->is_stub($route_info['filename'])
-				&& (count($uri_info) == count($route_info) + $uri_offset))
-				return array('closure'=>$closure, 'id'=>$uri_info['filename']);
 		}
 		throw new Exception('FATAL ERROR: no route matches '.$uri);
 	}
@@ -85,6 +103,18 @@ class Router
 	
 	private function is_stub($portion) {
 		return substr($portion,0,1) == ':';
+	}
+	
+	private function stub_value($portion) {
+		return substr($portion,1,(strlen($portion)-1));
+	}
+	
+	private function debug_match($uri_array, $ptn_array) {
+		echo "pattern<br>\n";
+		var_dump($uri_array);
+		echo "uri<br>\n";
+		var_dump($ptn_array);
+		echo "======<br>\n";
 	}
 };
 

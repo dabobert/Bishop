@@ -8,6 +8,9 @@ $router->get('/people/new', function($params) {
 	//will just display the html form
 });
 
+$router->get('/people/:people_id/cars/:id', function($params) {
+	//will just display the html form
+});
 
 //$router->get('/people/:id/edit', function($params) { //this is right
 $router->get('/people/edit/:id', function($params) { //this is wrong

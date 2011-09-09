@@ -19,11 +19,11 @@ class Viewer
 	
 	
 	public static function generate_template_path($uri, $action) {
-		$uri_info = pathinfo($uri)
-		{
+		$uri_info = pathinfo($uri);
+		//{
 			//if (isset($uri_info["dirname"]))
 			//else
-		}
+		//}
 		return dirname(__FILE__).'/../app/views/people/new.html.php';
 	}
 	
