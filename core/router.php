@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 
 //create the router object
-$router = new Router();
+$router = new Router(true);
 
 //include the routes file AFTER the router has been created
 require_once dirname(__FILE__).'/response.php';
@@ -57,7 +57,11 @@ class Router
 			
 			if ($this->debug)
 				$this->debug_match($uri_array, $ptn_array);
-	
+			
+			if (count($))
+			if count ptn_array != uri_array
+			 continue
+
 			foreach($ptn_array as $index=>$value) {
 				//$this->debug_micro_match($uri_array[$index],$ptn_array[$index]);
 				
@@ -75,7 +79,10 @@ class Router
 			
 				//if we haven't yet hit a break and we reach the max_index then we know we're done
 				if($max_index == $index)
-				{						
+				{
+					if ($this->debug)
+						echo "matched ==$pattern==<br>\n";
+						
 					//set the action
 					switch ($verb) {
 					case 'post':	$params["action"] = 'create';
