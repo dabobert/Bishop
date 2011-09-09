@@ -52,7 +52,6 @@ class Bishop
 		$response->path			= $this->params["path"];
 		$response->uri			= $this->uri;
 		$response->method		= $this->method;
-				exit();
 		$this->render($response);
 	}
 	
