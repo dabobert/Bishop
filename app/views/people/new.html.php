@@ -1,6 +1,6 @@
 <form action="/index.php/people" method="post"> 
 	<fieldset> 
-	  <legend>New Person=====</legend>
+	  <legend>New Person</legend>
 		<dl>
 			<dt><label for="first_name">first name</label></dt>
 			<dd><input type="text" name="person[first_name]" id="first_name" /><dd>

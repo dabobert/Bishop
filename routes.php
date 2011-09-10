@@ -32,15 +32,15 @@ $router->get('/admin/people', function($params) {
 });
 
 $router->post('/people', function($params) {
-	return new Response( "<h1>create a person </h1>");
+	return new Response( "received post:<br><h1>create a person </h1>");
 });
 
 $router->put('/people/:id', function($params) {
-	return new Response( "<h1>update a person</h1>");
+	return new Response( "received put:<br><h1>update a person</h1>");
 });
 
 $router->delete('/people/:id', function($params) {
-	return new Response( "<h1>delete a person</h1>");
+	return new Response( "received delete:<br><h1>delete a person</h1>");
 });
 
 ?>

@@ -150,7 +150,11 @@ class Router
 	}
 	
 	private function remove_action($pattern) {
-		return preg_replace('/\/:[a-z\/]+(?!.*confusing)/', NULL, $pattern);;
+		//below regex only works when there is a stub in the pattern
+		//return preg_replace('/\/:[a-z\/]+(?!.*confusing)/', NULL, $pattern);;
+		$pattern = preg_replace('/new$/', NULL, $pattern);
+		$pattern = preg_replace('/edit$/', NULL, $pattern);
+		return $pattern;
 	}
 	
 	private function is_stub($portion) {
