@@ -6,4 +6,10 @@ require_once dirname(__FILE__)."/core/bishop.php";
 $joey = new Bishop($router);
 $joey->run();
 
+/*
+var_dump(pathinfo('/people/:id/edit'));
+
+
+var_dump(pathinfo('/people/3/edit'));
+*/
 ?>

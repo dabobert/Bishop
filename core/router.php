@@ -58,72 +58,72 @@ class Router
 			if ($this->debug)
 				$this->debug_match($uri_array, $ptn_array);
 			
-			if (count($))
-			if count ptn_array != uri_array
-			 continue
-
-			foreach($ptn_array as $index=>$value) {
-				//$this->debug_micro_match($uri_array[$index],$ptn_array[$index]);
+			if (count($ptn_array) != count($uri_array))
+				continue;
+			else
+				foreach($ptn_array as $index=>$value) {
+					//$this->debug_micro_match($uri_array[$index],$ptn_array[$index]);
 				
-				if ($uri_array[$index] != $ptn_array[$index] && !$this->is_stub($value))
-				 	break;
+					if ($uri_array[$index] != $ptn_array[$index] && !$this->is_stub($value))
+					 	break;
 				
-				//if the current value is a stub save the value in params
-				if ($this->is_stub($value))
-					$params[$this->stub_value($value)] = $uri_array[$index];
+					//if the current value is a stub save the value in params
+					if ($this->is_stub($value))
+						$params[$this->stub_value($value)] = $uri_array[$index];
 				
-				if ($this->debug)
-					echo "PASS!!!<br>\n";
-				
-				//$this->debug_micro_match($index,$max_index);
-			
-				//if we haven't yet hit a break and we reach the max_index then we know we're done
-				if($max_index == $index)
-				{
 					if ($this->debug)
-						echo "matched ==$pattern==<br>\n";
+						echo "PASS!!!<br>\n";
+				
+					//$this->debug_micro_match($index,$max_index);
+			
+					//if we haven't yet hit a break and we reach the max_index then we know we're done
+					if($max_index == $index)
+					{
+						if ($this->debug)
+							echo "matched ==$pattern==<br>\n";
 						
-					//set the action
-					switch ($verb) {
-					case 'post':	$params["action"] = 'create';
-					case 'put':		$params["action"] = 'update';
-					case 'delete':		
-					case 'header':
-					case 'options':	
-						$params["action"] = $verb;
-					    break;
-					case 'get':
-						if ($this->is_stub($ptn_array[$max_index]))
-							$params["action"] = 'show';
-						elseif ($uri_array[$max_index] == "new" || $uri_array[$max_index] == "edit")
-							$params["action"] = $uri_array[$max_index];
-						else
-							$params["action"] = "index";
-						break;
-					default:
-						throw new Exception('FATAL ERROR: Bishop can not handle a method of '.$verb."\n");
-					}
-					
-					//values used to parse the pattern to determine the path to any needed view files
-					$stub_count 	= 0;
-					if (!$this->is_stub($ptn_array[$max_index]))
-						$stub_count++;
-						
-					$params["path"] = NULL;
-					
-					for($index=$max_index; $index>=0; $index--) {
-						if (!$this->is_stub($ptn_array[$index]))
-							$params["path"] = $ptn_array[$index].'/'.$params["path"];
-							
-						if ($this->is_stub($ptn_array[$index]))
-							$stub_count++;
-
-						if ($stub_count == 2)
+						//set the action
+						switch ($verb) {
+						case 'post':	$params["action"] = 'create';
+						case 'put':		$params["action"] = 'update';
+						case 'delete':		
+						case 'header':
+						case 'options':	
+							$params["action"] = $verb;
+						    break;
+						case 'get':
+							if ($this->is_stub($ptn_array[$max_index]))
+								$params["action"] = 'show';
+							elseif ($uri_array[$max_index] == "new" || $uri_array[$max_index] == "edit")
+								$params["action"] = $uri_array[$max_index];
+							else
+								$params["action"] = "index";
 							break;
+						default:
+							throw new Exception('FATAL ERROR: Bishop can not handle a method of '.$verb."\n");
+						}
+					
+						//values used to parse the pattern to determine the path to any needed view files
+						$stub_count 	= 0;
+						if (!$this->is_stub($ptn_array[$max_index]))
+							$stub_count++;
+						
+						$params["path"] = NULL;
+					
+						for($index=$max_index; $index>=0; $index--) {
+							if (!$this->is_stub($ptn_array[$index]))
+								$params["path"] = $ptn_array[$index].'/'.$params["path"];
+							
+							if ($this->is_stub($ptn_array[$index]))
+								$stub_count++;
+
+							if ($stub_count == 2)
+								break;
+						}
+						return array('closure'=>$closure, 'params'=>$params);
 					}
-					return array('closure'=>$closure, 'params'=>$params);
 				}
-			}
+		
 		}
 		throw new Exception('FATAL ERROR: no route matches '.$uri);
 	}
