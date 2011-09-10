@@ -1,7 +1,7 @@
 <?
 error_reporting(E_ALL);
 
-//create the router object
+//create the router object, pass in true to see debugging info
 $router = new Router();
 
 //include the routes file AFTER the router has been created
@@ -62,7 +62,8 @@ class Router
 				continue;
 			else
 				foreach($ptn_array as $index=>$value) {
-					//$this->debug_micro_match($uri_array[$index],$ptn_array[$index]);
+					if ($this->debug)
+						$this->debug_micro_match($uri_array[$index],$ptn_array[$index]);
 				
 					if ($uri_array[$index] != $ptn_array[$index] && !$this->is_stub($value))
 					 	break;
@@ -74,7 +75,7 @@ class Router
 					if ($this->debug)
 						echo "PASS!!!<br>\n";
 				
-					//$this->debug_micro_match($index,$max_index);
+				
 			
 					//if we haven't yet hit a break and we reach the max_index then we know we're done
 					if($max_index == $index)
@@ -103,18 +104,26 @@ class Router
 							throw new Exception('FATAL ERROR: Bishop can not handle a method of '.$verb."\n");
 						}
 					
+						//we'll be interating over an version of the patter without any trailing actions
+						$tmp_array = Router::clean_explode($this->remove_action($pattern));
+					
+						//size of tmp array
+						$max_tmp_index = count($tmp_array) - 1;
+						
 						//values used to parse the pattern to determine the path to any needed view files
 						$stub_count 	= 0;
-						if (!$this->is_stub($ptn_array[$max_index]))
+						if (!$this->is_stub($tmp_array[$max_tmp_index]))
 							$stub_count++;
+						
+						
 						
 						$params["path"] = NULL;
 					
-						for($index=$max_index; $index>=0; $index--) {
-							if (!$this->is_stub($ptn_array[$index]))
-								$params["path"] = $ptn_array[$index].'/'.$params["path"];
-							
-							if ($this->is_stub($ptn_array[$index]))
+						for($index=$max_tmp_index; $index>=0; $index--) {
+							if (!$this->is_stub($tmp_array[$index]))
+								$params["path"] = $tmp_array[$index].'/'.$params["path"];
+
+							if ($this->is_stub($tmp_array[$index]))
 								$stub_count++;
 
 							if ($stub_count == 2)
@@ -140,6 +149,9 @@ class Router
 		$this->routes[$verb][$uri] = $closure;
 	}
 	
+	private function remove_action($pattern) {
+		return preg_replace('/\/:[a-z\/]+(?!.*confusing)/', NULL, $pattern);;
+	}
 	
 	private function is_stub($portion) {
 		return substr($portion,0,1) == ':';
@@ -149,6 +161,7 @@ class Router
 		return substr($portion,1,(strlen($portion)-1));
 	}
 	
+	//debuging functions
 	private function debug_heavy_break() {
 		echo '~~~~~~~~~~~~~~~~~<br>'."\n";
 	}

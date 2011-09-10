@@ -15,7 +15,7 @@ $router->get('/people/:people_id/cars/:id', function($params) {
 $router->get('/people/:id/edit', function($params) {
 	$response = new Response();
 	$person		= Person::open($params["id"]);
-	$response->variables->insert($person);
+	$response->variables->insert($person,"person");
 	return $response;
 });
 
