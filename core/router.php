@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 
 //create the router object
-$router = new Router(true);
+$router = new Router();
 
 //include the routes file AFTER the router has been created
 require_once dirname(__FILE__).'/response.php';

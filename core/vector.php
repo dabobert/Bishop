@@ -37,6 +37,10 @@ class Vector
 		return count($this->array) == 0;
 	}
 	
+	public function access($key) {
+		return count($this->array[$key]);
+	}
+	
 }
 
 

@@ -8,19 +8,13 @@ class Viewer
 	
 	public function render($response, $format='html') {
 		$this->response 		= $response;
-		
+
 		if ($this->response->action == "headers")
 			$this->display_header();
 		elseif ($this->response->body)
 			echo $this->response->body;
 		else
 			echo $this->apply_template();
-	}
-
-	
-	
-	public function generate_template_path() {
-
 	}
 	
 	
@@ -34,8 +28,9 @@ class Viewer
 			throw new Exception('FATAL ERROR: a view does not exist at '.$this->template_file.' nor does a value exist for body variable of the response object. TO FIX: assign something to $response->body in your route or create a file at '.$this->template_file."\n");
 		
 		if (!$this->response->variables->blank())
-			extract($this->response->variables);
-		
+			extract($this->response->variables->contents());
+
+			
 		ob_start();
 			$this->display_header();
 	

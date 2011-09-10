@@ -16,6 +16,7 @@ $router->get('/people/:id/edit', function($params) {
 	$response = new Response();
 	$person		= Person::open($params["id"]);
 	$response->variables->insert($person);
+	return $response;
 });
 
 
@@ -23,7 +24,7 @@ $router->get('/people/:id', function($params) {
 	$response = new Response();
 	$person		= Person::open($params["id"]);
 	$response->variables->insert($person,"person");
-	throw new Exception(var_dump($response->response->contents()));
+	return $response;
 });
 
 $router->get('/admin/people', function($params) {

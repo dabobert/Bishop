@@ -25,7 +25,7 @@ class Person {
 		$people = file(dirname(__FILE__).'/../../support/people.txt');
 
 		//explode the row, and pass it to the person model
-		$person = new Person(explode("\t",$people[$line]));
+		return new Person(explode("\t",$people[$line]));
 	}
 }
 

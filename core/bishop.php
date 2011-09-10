@@ -44,9 +44,10 @@ class Bishop
 	
 	public function run() {
 		$match 							= $this->router->match($this->method,$this->uri);
-		//Make a response object if the closure was empty		
+		//Make a response object if the closure was empty
 		if (! ($response = $match['closure']($this->params($match))))
 			$response = new Response();
+			
 		$response->action		= $this->params["action"];
 		$response->format		= $this->format;
 		$response->path			= $this->params["path"];
