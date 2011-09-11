@@ -1,11 +1,11 @@
 jQuery(document).ready(function() {
 	
-//alert("hey");
-
 	jQuery("form").live("submit", function() {
-	
-		alert("hey");
-	})
+		if ($(this).attr("method") == "put") {
+			$(this).attr("method","post");
+			$(this).append('<input type="hidden" name="_method" value="put" />');
+		}
+	});
 	
 
 });

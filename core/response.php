@@ -13,6 +13,7 @@ class Response
 	public $path;
 	public $format;
 	public $method;
+	public $debug;
 	
 	function __construct($str='') {
 		$this->header 	= new Vector();

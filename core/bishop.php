@@ -26,7 +26,7 @@ class Bishop
 			$this->method 	= strtolower($_SERVER['REQUEST_METHOD']);
 		$this->router			= $router;
 		$this->uri				= $this->clean_uri();
-		$this->format			= $this->format();
+		$this->format			= Bishop::format($this->uri);
 		$this->template_engine	= new Viewer;
 		$this->params;			//defined in Bishop::params()
 	}
@@ -54,6 +54,7 @@ class Bishop
 		return $uri;
 	}
 	
+	
 	public function params($match)
 	{
 		$this->params				= array_merge($match["params"],$_REQUEST,$this->parse_argv());
@@ -61,21 +62,25 @@ class Bishop
 		return $this->params;
 	}
 	
-	
 	public function run() {
-		$match 							= $this->router->match($this->method,$this->uri);
+		$match 			= $this->router->match($this->method,$this->uri);
+		$response 	= $this->get_response($match);
+		$this->render($response);
+	}
+	
+	
+	protected function get_response($match) {
 		//Make a response object if the closure was empty
 		if (! ($response = $match['closure']($this->params($match))))
 			$response = new Response();
-			
+		$response->debug		= $this->router->debug;
 		$response->action		= $this->params["action"];
 		$response->format		= $this->format;
 		$response->path			= $this->params["path"];
 		$response->uri			= $this->uri;
 		$response->method		= $this->method;
-		$this->render($response);
+		return $response;
 	}
-	
 	
 	protected function render($response) {
 		//to change how bishop renders inherit from bishop and overload the fn
@@ -99,8 +104,8 @@ class Bishop
 		return $array;
 	}
 	
-	public function format() {
-		$uri_info = pathinfo($this->uri);
+	static public function format($uri) {
+		$uri_info = pathinfo($uri);
 		if (isset($uri_info['extension']))	
 			switch ($uri_info['extension']) {
 			case 'json':
@@ -117,7 +122,7 @@ class Bishop
 	}
 	
 	
-	private static function debug() {
+	static private function debug() {
 		var_dump($_SERVER);
 		echo "<hr>\n";
 		var_dump($_SERVER['PATH_INFO']);

@@ -2,7 +2,7 @@
 error_reporting(E_ALL);
 
 //create the router object, pass in true to see debugging info
-$router = new Router();
+$router = new Router(true);
 
 //include the routes file AFTER the router has been created
 require_once dirname(__FILE__).'/response.php';
@@ -11,7 +11,7 @@ require_once dirname(__FILE__).'/../routes.php';
 
 class Router
 {
-	private	$debug;
+	public	$debug;
 	public	$routes;
 	
 	//when debug is false, it will not display debugging information

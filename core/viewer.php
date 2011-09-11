@@ -8,7 +8,7 @@ class Viewer
 	
 	public function render($response, $format='html') {
 		$this->response 		= $response;
-
+		
 		if ($this->response->action == "headers")
 			$this->display_header();
 		elseif ($this->response->body)
