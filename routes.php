@@ -1,6 +1,13 @@
 <?
 
 $router->get('/people', function($params) {
+	
+		$people = file(dirname(__FILE__).'/../../support/people.txt');
+
+		//explode the row, and pass it to the person model
+		//return new Person(explode("\t",$people[$line]));
+	
+	
 	return new Response("<h1>show all people</h1>");
 });
 

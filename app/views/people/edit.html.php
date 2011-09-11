@@ -1,3 +1,5 @@
+<a href="#" class="foo">hey</a>
+
 <form action="/index.php/people" method="put"> 
 	<fieldset> 
 	  <legend>Edit Person</legend>
@@ -13,7 +15,7 @@
 			<dt><label for="email_display">email_display</label></dt>
 			<dd><input type="text" name="person[email_display]" id="email_display" value="<?= $person->email_display ?>"/><dd>
 			<dt><label></label></dt>
-			<dd><input type="submit" /></dd>
+			<dd><input type="submit" /><input type="hidden" name="_method" value="put" /></dd>
 		</dl>
 	</fieldset>
 </form>
