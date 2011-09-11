@@ -19,9 +19,14 @@ class Bishop
 	
 	function __construct($router) {
 		//Bishop::debug();
-		$this->method 		= strtolower($_SERVER['REQUEST_METHOD']);
+		
+		if (isset($_POST["_method"]))
+			$this->method		= $_POST["_method"];
+		else
+			$this->method 	= strtolower($_SERVER['REQUEST_METHOD']);
 		$this->router			= $router;
 		$this->uri				= $this->clean_uri();
+		exit($this->uri);
 		$this->format			= $this->format();
 		$this->template_engine	= new Viewer;
 		$this->params;			//defined in Bishop::params()
