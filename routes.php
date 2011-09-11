@@ -48,6 +48,7 @@ $router->post('/people', function($params) {
 
 $router->put('/people/:id', function($params) {
 	//data needed to update a person is in params
+	var_dump($_POST);
 	return new Response( "received put:<br><h1>update a person</h1>");
 });
 
