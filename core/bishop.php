@@ -26,17 +26,32 @@ class Bishop
 			$this->method 	= strtolower($_SERVER['REQUEST_METHOD']);
 		$this->router			= $router;
 		$this->uri				= $this->clean_uri();
-		exit($this->uri);
 		$this->format			= $this->format();
 		$this->template_engine	= new Viewer;
 		$this->params;			//defined in Bishop::params()
 	}
 	
 	public function clean_uri() {
+		$regex_array 		= array();
+		$replacements		= array();
 		//remove any trailing slash, and run pathinfo on the result
-		$uri_info = pathinfo(preg_replace('/\/\z/', NULL, $_SERVER['PATH_INFO']));
+		$regex_array[] 	= '/\/\z/';
+		//remove multiple / like //// to be replaced
+		$regex_array[]	= '/[\/]+/';
+		
+		//replace trailing / with NULL
+		$replacements[]	= NULL;
+		//replace multiple / witha a single /
+		$replacements[] = '/';
+		
+		$uri_info = pathinfo(preg_replace($regex_array, $replacements, $_SERVER['PATH_INFO']));
 		//return the dirname + filename.  we're doing this to strip the extension and any query parameters from the raw uri
-		return $uri_info['dirname'].'/'.$uri_info['filename'];
+		$uri = '/'.$uri_info['filename'];
+		
+		//only concatenate on dirname if dirname exists, otherwise you will always get //people for index
+		if (isset($uri_info['dirname']) && $uri_info['dirname'] != "/")
+			$uri = $uri_info['dirname'].$uri;
+		return $uri;
 	}
 	
 	public function params($match)

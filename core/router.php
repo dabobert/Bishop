@@ -9,7 +9,6 @@ require_once dirname(__FILE__).'/response.php';
 require_once dirname(__FILE__).'/../routes.php';
 
 
-
 class Router
 {
 	private	$debug;

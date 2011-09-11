@@ -1,23 +1,27 @@
 <?
 
 $router->get('/people', function($params) {
+	$response = new Response();
 	
-		$people = file(dirname(__FILE__).'/../../support/people.txt');
-
-		//explode the row, and pass it to the person model
-		//return new Person(explode("\t",$people[$line]));
+	$lines = count(file(dirname(__FILE__).'/support/people.txt'));
 	
-	
-	return new Response("<h1>show all people</h1>");
+	for($i=0; $i < $lines; $i++)
+		$people[] = Person::open($i+1);
+		
+	$response->variables->insert($people,"people");
+	return $response;
 });
+
 
 $router->get('/people/new', function($params) {
 	//will just display the html form
 });
 
+
 $router->get('/people/:people_id/cars/:id', function($params) {
-	//will just display the html form
+	//will cause an error because there is no response body and there is no view add app/views/cars/show.html.php
 });
+
 
 $router->get('/people/:id/edit', function($params) {
 	$response = new Response();
@@ -43,10 +47,12 @@ $router->post('/people', function($params) {
 });
 
 $router->put('/people/:id', function($params) {
+	//data needed to update a person is in params
 	return new Response( "received put:<br><h1>update a person</h1>");
 });
 
 $router->delete('/people/:id', function($params) {
+	//data needed to delete a person is in params
 	return new Response( "received delete:<br><h1>delete a person</h1>");
 });
 

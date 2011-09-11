@@ -1,6 +1,6 @@
 <a href="#" class="foo">hey</a>
 
-<form action="/index.php/people" method="post"> 
+<form action="/index.php/people/<?= $person->id ?>" method="post"> 
 	<fieldset> 
 	  <legend>Edit Person</legend>
 		<dl>
