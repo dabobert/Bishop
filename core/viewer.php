@@ -30,7 +30,6 @@ class Viewer
 		if (!$this->response->variables->blank())
 			extract($this->response->variables->contents());
 
-			
 		ob_start();
 			$this->display_header();
 	
@@ -44,6 +43,7 @@ class Viewer
 
 		return $applied_template;
 	}
+	
 	
 	private function format_header() {
 		switch ($this->response->format) {
