@@ -49,10 +49,10 @@ class Viewer
 		switch ($this->response->format) {
 		case 'txt':		'Content-Type: text/plain';
 		case 'json':	'Content-type: application/json';
-		case 'xml': 	
-		case 'html':
+		case 'xml': 	'Content-Type: text/xml';
+		case 'html':	'Content-Type: text/html';
 		default:
-			return 'html';
+			return 'Content-Type: text/html';
 		}
 	}
 	
